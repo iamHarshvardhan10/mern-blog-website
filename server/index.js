@@ -4,6 +4,10 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
 dotenv.config()
+
+
+// Importing All Routes 
+import testRoutes from './routes/user.route.js'
 // connecting express with const app
 const app = express()
 
@@ -21,10 +25,4 @@ app.listen(1000, () => {
 })
 
 
-// basic get route
-app.get('/', (req, res) => {
-    res.json({
-        message: "Welcome to our API",
-        Success: 'Its server 1000'
-    })
-})
+app.use('/api/v1' , testRoutes)
