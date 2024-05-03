@@ -28,7 +28,21 @@ app.listen(1000, () => {
 })
 
 
-app.use('/api/v1/user' , testRoutes)
+app.use('/api/v1/user', testRoutes)
 
 // User APIs
-app.use('/api/v1/auth',authRoutes)
+app.use('/api/v1/auth', authRoutes)
+
+
+// creating Middleware 
+
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error'
+    res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message
+    })
+    next()
+})
