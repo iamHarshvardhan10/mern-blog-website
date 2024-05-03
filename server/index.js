@@ -8,8 +8,11 @@ dotenv.config()
 
 // Importing All Routes 
 import testRoutes from './routes/user.route.js'
+import authRoutes from './routes/auth.route.js'
 // connecting express with const app
 const app = express()
+
+app.use(express.json())
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log('MongoDB Connected')
@@ -25,4 +28,7 @@ app.listen(1000, () => {
 })
 
 
-app.use('/api/v1' , testRoutes)
+app.use('/api/v1/user' , testRoutes)
+
+// User APIs
+app.use('/api/v1/auth',authRoutes)
