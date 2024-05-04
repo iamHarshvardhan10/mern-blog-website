@@ -1,4 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+*{
+    font-family: "Roboto", sans-serif;
+}
+
+@keyframes moveBorder {
+    0% {
+      left: 0;
+      border-color: #f00;
+    }
+    25% {
+      left: 25%;
+      border-color: #0f0;
+    }
+    50% {
+      left: 50%;
+      border-color: #00f;
+    }
+    75% {
+      left: 75%;
+      border-color: #ff0;
+    }
+    100% {
+      left: 100%;
+      border-color: #f0f;
+    }
+  }
+  
+  .animate-border {
+    animation: moveBorder 5s linear infinite;
+  }
+  
