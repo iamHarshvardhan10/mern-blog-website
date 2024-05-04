@@ -14,6 +14,7 @@ const app = express()
 
 app.use(express.json())
 
+// eslint-disable-next-line no-undef
 mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log('MongoDB Connected')
 }).catch((error) => {
