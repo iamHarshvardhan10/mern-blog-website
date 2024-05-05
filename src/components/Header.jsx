@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [toggle, setToggle] = useState(false);
@@ -13,10 +14,12 @@ const Header = () => {
   return (
     <nav className="p-4  flex justify-around items-center border-b-2">
       <div className="flex self-center">
-        <span className="text-md bg-gradient-to-r from-purple-500 to-pink-500 pl-[5px] pr-[5px] text-[22px] rounded-md text-white">
-          Harsh
-        </span>
-        <span className="text-md p-1 text-[20px] font-semibold">Blog</span>
+        <Link to="/">
+          <span className="text-md bg-gradient-to-r from-purple-500 to-pink-500 pl-[5px] pr-[5px] text-[22px] rounded-md text-white">
+            Harsh
+          </span>
+          <span className="text-md p-1 text-[20px] font-semibold">Blog</span>
+        </Link>
       </div>
       <form className="flex items-center border border-black pt-[5px] pb-[5px] pl-[10px] pr-[10px] rounded-md">
         <input
@@ -30,9 +33,15 @@ const Header = () => {
       </form>
 
       <ul className="flex gap-4 text-md">
-        <li>Home</li>
-        <li>About</li>
-        <li>Projects</li>
+        <Link to="/">
+          <li>Home</li>
+        </Link>
+        <Link to="/about">
+          <li>About</li>
+        </Link>
+        <Link to="/projects">
+          <li>Projects</li>
+        </Link>
       </ul>
 
       <div className="flex items-center gap-[2rem]">
@@ -46,9 +55,9 @@ const Header = () => {
             <MdDarkMode className="text-xl" />
           )}
         </button>
-        <button className="pt-[5px] pb-[5px] pl-[15px] pr-[15px] rounded-md border-2 border-gray-500">
+        <Link to='/sign-up' className="pt-[5px] pb-[5px] pl-[15px] pr-[15px] rounded-md border-2 border-gray-500">
           SignIn
-        </button>
+        </Link>
       </div>
     </nav>
   );
