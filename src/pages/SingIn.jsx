@@ -1,24 +1,33 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from "../pages/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  signStart,
+  signSuccess,
+  signFailure,
+} from "../redux/userSlice/userSlice";
 
 const SingIn = () => {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage("All Fields Required");
+      return dispatch(signFailure("All Fields are Required"));
     }
     try {
-      setErrorMessage(null);
-      setLoading(true);
+      dispatch(signStart());
       const response = await fetch("/api/v1/auth/signin", {
         method: "POST",
         headers: {
@@ -29,12 +38,15 @@ const SingIn = () => {
       const data = await response.json();
       console.log(data);
       if (data.success == false) {
-        return setErrorMessage(data.message);
+        dispatch(signFailure(data.message));
       }
-      setLoading(false);
+      // dispatch(signStart());
+      if (response.ok) {
+        dispatch(signSuccess(data));
+        navigate("/");
+      }
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signFailure(error.message));
     }
   };
 
