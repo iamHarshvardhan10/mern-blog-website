@@ -32,7 +32,7 @@ app.listen(1000, () => {
 app.use('/api/v1/user', testRoutes)
 
 // User APIs
-app.use('/api/v1/auth', authRoutes)
+app.use('/api/auth', authRoutes)
 
 
 // creating Middleware 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from '../pages/Loading'
+import Oauth from "../components/Oauth";
 
 const SingUp = () => {
   const [formData, setFormData] = useState({});
@@ -19,7 +20,7 @@ const SingUp = () => {
     try {
       setLoading(true);
       setErrorMessage(null);
-      const response = await fetch("/api/v1/auth//signup", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -67,6 +68,7 @@ const SingUp = () => {
         <button className="mt-[20px] p-2 uppercase border-2 bg-slate-300" disabled={loading}>
           {loading ? (<Loading/>)  : 'Sign Up'}
         </button>
+        <Oauth/>
       </form>
       <div>
         <span>Have an Account ?</span>

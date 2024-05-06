@@ -1,5 +1,5 @@
 import express from 'express'
-import { signUp, signin } from '../controllers/auth.controller.js';
+import { google, signUp, signin } from '../controllers/auth.controller.js';
 
 const router = express.Router()
 
@@ -8,5 +8,8 @@ router.post('/signup', signUp)
 
 // User signIn
 router.post('/signin', signin)
+
+// Google Auth
+router.post('/google',google)
 
 export default router;

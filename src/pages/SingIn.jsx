@@ -8,6 +8,7 @@ import {
   signSuccess,
   signFailure,
 } from "../redux/userSlice/userSlice";
+import Oauth from "../components/Oauth";
 
 const SingIn = () => {
   const [formData, setFormData] = useState({});
@@ -28,7 +29,7 @@ const SingIn = () => {
     }
     try {
       dispatch(signStart());
-      const response = await fetch("/api/v1/auth/signin", {
+      const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,6 +77,7 @@ const SingIn = () => {
         >
           {loading ? <Loading /> : "SignIn"}
         </button>
+        <Oauth/>
       </form>
       <div>
         <span>Create an Account ?</span>
