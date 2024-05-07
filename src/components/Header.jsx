@@ -3,13 +3,19 @@ import { FaSearch } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [toggle, setToggle] = useState(false);
-  console.log(toggle);
+  const [isdropMenu, setIsDropMenu] = useState(false);
+  // console.log(toggle);
 
   const handleToggle = () => {
     setToggle(!toggle);
+  };
+  const handleDropClick = () => {
+    setIsDropMenu(!isdropMenu);
   };
   return (
     <nav className="p-4  flex justify-around items-center border-b-2">
@@ -55,9 +61,31 @@ const Header = () => {
             <MdDarkMode className="text-xl" />
           )}
         </button>
-        <Link to='/sign-up' className="pt-[5px] pb-[5px] pl-[15px] pr-[15px] rounded-md border-2 border-gray-500">
-          SignIn
-        </Link>
+        {currentUser && currentUser ? (
+          <div>
+            <img
+              src={currentUser.imageUrl}
+              alt=""
+              className="w-[40px] h-[40px] rounded-full"
+              onClick={handleDropClick}
+            />
+            {isdropMenu ? (
+              <div>
+                <p>{currentUser?.userName}</p>
+                <p>{currentUser?.email}</p>
+                <Link to="/dashboard?tab=profile">Profile</Link>
+                <Link to="/">Logout</Link>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <Link
+            to="/sign-up"
+            className="pt-[5px] pb-[5px] pl-[15px] pr-[15px] rounded-md border-2 border-gray-500"
+          >
+            SignIn
+          </Link>
+        )}
       </div>
     </nav>
   );
