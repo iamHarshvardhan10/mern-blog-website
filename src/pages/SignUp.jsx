@@ -46,7 +46,7 @@ const SingUp = () => {
         <img src={signInImg} alt="" className="w-[950px] h-[90vh]" />
       </div>
       <div className="w-[450px] border-4 border-gray-400 p-8 rounded-3xl">
-        <h1 className="text-2xl uppercase mb-4 font-semibold">
+        <h1 className="text-2xl uppercase mb-4 font-semibold text-center">
           Create an Account{" "}
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col">
@@ -90,14 +90,14 @@ const SingUp = () => {
             onChange={handleChange}
           />
           <button
-            className="mt-[10px] mb-2 p-2 border border-black rounded-md uppercase font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white"
+            className="mt-[10px] mb-2 p-2 border border-black rounded-md uppercase font-emibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white"
             disabled={loading}
           >
             {loading ? <Loading /> : "Sign Up"}
           </button>
           <Oauth />
         </form>
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center mt-2">
           <span className="text-md font-semibold capitalize">Have an Account ?</span>
           <Link to="/sign-in" className="text-blue-700 font-semibold uppercase">
             <span>Sign In</span>
