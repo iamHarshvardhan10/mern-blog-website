@@ -1,4 +1,7 @@
 import { useDispatch } from "react-redux";
+
+//react icons  
+import { FcGoogle } from "react-icons/fc";
 import { signSuccess } from "../redux/userSlice/userSlice";
 import { app } from "../firebase";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
@@ -36,7 +39,8 @@ const Oauth = () => {
   };
 
   return (
-    <div className="" onClick={googleAuth}>
+    <div className="mb-2 border border-black uppercase  p-2 flex items-center gap-3 justify-center font-medium text-white bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 rounded-md" onClick={googleAuth}>
+      <FcGoogle className="text-2xl"/>
       Continue To Google
     </div>
   );
