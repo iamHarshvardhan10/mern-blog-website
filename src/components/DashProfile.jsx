@@ -1,27 +1,120 @@
-import { useSelector } from "react-redux"
-
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { useRef, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { app } from "../firebase";
 
 const DashProfile = () => {
-  const {currentUser} = useSelector(state => state.user)
+  const { currentUser } = useSelector((state) => state.user);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+  const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const filePicker = useRef();
+
+  // console.log(imageFileUploadProgress, imageFileUploadError);
+  const handleFileImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = () => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + imageFile.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const proress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageFileUploadProgress(proress.toFixed(0));
+      },
+
+      (error) => {
+        setImageFileUploadError(`Image Should be less than than 2Mb ${error} `);
+        setImageFileUploadProgress(null)
+        setImageFile(null)
+        setImageFileUrl(null)
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          setImageFileUrl(downloadUrl);
+        });
+      }
+    );
+  };
   return (
     <div className="flex flex-col  mx-auto p-3">
-      <h1 className="my-7 text-center font-semibold text-3xl uppercase">Profile</h1>
+      <h1 className="my-7 text-center font-semibold text-3xl uppercase">
+        Profile
+      </h1>
       <form className="flex flex-col gap-2">
-        <div className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full mb-4">
-
-        <img src={currentUser.imageUrl} alt="User Profile" className="w-full h-full border-4 rounded-full"/>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileImage}
+          ref={filePicker}
+          hidden
+        />
+        <div
+          className="w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full mb-4"
+          onClick={() => filePicker.current.click()}
+        >
+          <img
+            src={imageFileUrl || currentUser.imageUrl}
+            alt="User Profile"
+            className="w-full h-full border-4 rounded-full"
+          />
         </div>
-        <input type="text" id="userName" placeholder="userName" className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold" value={currentUser.userName}/>
-        <input type="email" id="email" placeholder="email" className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold" value={currentUser.email}/>
-        <input type="password" id="password" placeholder="password" className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold" value={currentUser.password}/>
-        <button className="border-2 border-gray-500 p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold uppercase">Update</button>
+        {imageFileUploadProgress && <div className="text-green-600 text-xl self-center">{`Image Uploading ${imageFileUploadProgress}%`}</div>}
+        <input
+          type="text"
+          id="userName"
+          placeholder="userName"
+          className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
+          defaultValue={currentUser.userName}
+        />
+        <input
+          type="email"
+          id="email"
+          placeholder="email"
+          className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
+          defaultValue={currentUser.email}
+        />
+        <input
+          type="password"
+          id="password"
+          placeholder="password"
+          className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
+        />
+        <button className="border-2 border-gray-500 p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold uppercase">
+          Update
+        </button>
       </form>
       <div className="text-red-500 flex justify-between gap-2 mt-5">
-        <span className="cursor-pointer text-md font-semibold uppercase border-black border p-2 rounded-md">Delete Account</span>
-        <span className="cursor-pointer text-md font-semibold uppercase border-black border p-2 rounded-md">Sign Out</span>
+        <span className="cursor-pointer text-md font-semibold uppercase border-black border p-2 rounded-md">
+          Delete Account
+        </span>
+        <span className="cursor-pointer text-md font-semibold uppercase border-black border p-2 rounded-md">
+          Sign Out
+        </span>
       </div>
+      {imageFileUploadError && (
+        <div className="text-red-500">{imageFileUploadError}</div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default DashProfile
+export default DashProfile;
