@@ -2,17 +2,18 @@ import express from 'express'
 import mongoose from 'mongoose'
 
 import dotenv from 'dotenv'
-
+import cookieParser from 'cookie-parser'
 dotenv.config()
 
 
 // Importing All Routes 
-import testRoutes from './routes/user.route.js'
+import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 // connecting express with const app
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 // eslint-disable-next-line no-undef
 mongoose.connect(process.env.MONGO_URL).then(() => {
@@ -29,7 +30,7 @@ app.listen(1000, () => {
 })
 
 
-app.use('/api/v1/user', testRoutes)
+app.use('/api/user', userRoutes)
 
 // User APIs
 app.use('/api/auth', authRoutes)

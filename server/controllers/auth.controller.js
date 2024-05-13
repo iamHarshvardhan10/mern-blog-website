@@ -53,9 +53,7 @@ export const signin = async (req, res, next) => {
             return next(errorHandler(404, 'Invalid Password'))
         }
 
-        // eslint-disable-next-line no-undef
-        const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY)
-        // eslint-disable-next-line no-unused-vars
+        const token = jwt.sign({ id: validUser._id }, 'mern-blog-website')
         const { password: pass, ...rest } = validUser._doc
         res.status(200).cookie('access_token', token, { httpOnly: true }).json({ message: 'SingIn SuccessFully', access_token: token, ...rest })
     } catch (error) {
@@ -72,7 +70,7 @@ export const google = async (req, res, next) => {
         const user = await User.findOne({ email })
         if (user) {
             // eslint-disable-next-line no-undef
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({ id: user._id }, 'mern-blog-website')
             const { password, ...rest } = user._doc;
             res.status(200).cookie('access_token', token, {
                 httpOnly: true,
@@ -88,7 +86,7 @@ export const google = async (req, res, next) => {
             })
             await newUser.save()
             // eslint-disable-next-line no-undef
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({ id: user._id }, 'mern-blog-website')
             const { password, ...rest } = user._doc;
             res.status(200).cookie('access_token', token, {
                 httpOnly: true,
