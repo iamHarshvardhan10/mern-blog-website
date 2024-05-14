@@ -5,8 +5,13 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { app } from "../firebase";
+import {
+  updateStart,
+  updateFailure,
+  updateSuccess,
+} from "../redux/userSlice/userSlice";
 
 const DashProfile = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -14,7 +19,12 @@ const DashProfile = () => {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+  const [updateUserError, setUpdateUserError] = useState(false);
   const filePicker = useRef();
+  const dispatch = useDispatch();
 
   // console.log(imageFileUploadProgress, imageFileUploadError);
   const handleFileImage = (e) => {
@@ -43,23 +53,65 @@ const DashProfile = () => {
 
       (error) => {
         setImageFileUploadError(`Image Should be less than than 2Mb ${error} `);
-        setImageFileUploadProgress(null)
-        setImageFile(null)
-        setImageFileUrl(null)
+        setImageFileUploadProgress(null);
+        setImageFile(null);
+        setImageFileUrl(null);
+        setImageFileUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
           setImageFileUrl(downloadUrl);
+          setFormData({ ...formData, imageUrl: downloadUrl });
+          setImageFileUploading(false);
         });
       }
     );
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUpdateUserError(null);
+    setUpdateUserSuccess(null);
+    if (Object.keys(formData).length === 0) {
+      return;
+    }
+    if (imageFileUploading) {
+      setUpdateUserError("Please Wait For Image to Upload");
+    }
+    try {
+      dispatch(updateStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        dispatch(updateFailure(data.message));
+        setUpdateUserError(data.message);
+      } else {
+        dispatch(updateSuccess(data));
+        setUpdateUserSuccess("User Profile Uploaded Successfully");
+      }
+    } catch (error) {
+      dispatch(updateFailure(error.message));
+      setUpdateUserError(error.message);
+    }
+  };
+
   return (
     <div className="flex flex-col  mx-auto p-3">
       <h1 className="my-7 text-center font-semibold text-3xl uppercase">
         Profile
       </h1>
-      <form className="flex flex-col gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="file"
           accept="image/*"
@@ -77,13 +129,16 @@ const DashProfile = () => {
             className="w-full h-full border-4 rounded-full"
           />
         </div>
-        {imageFileUploadProgress && <div className="text-green-600 text-xl self-center">{`Image Uploading ${imageFileUploadProgress}%`}</div>}
+        {imageFileUploadProgress && (
+          <div className="text-green-600 text-xl self-center">{`Image Uploading ${imageFileUploadProgress}%`}</div>
+        )}
         <input
           type="text"
           id="userName"
           placeholder="userName"
           className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
           defaultValue={currentUser.userName}
+          onChange={handleChange}
         />
         <input
           type="email"
@@ -91,12 +146,14 @@ const DashProfile = () => {
           placeholder="email"
           className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
           defaultValue={currentUser.email}
+          onChange={handleChange}
         />
         <input
           type="password"
           id="password"
           placeholder="password"
           className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
+          onChange={handleChange}
         />
         <button className="border-2 border-gray-500 p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold uppercase">
           Update
@@ -112,6 +169,12 @@ const DashProfile = () => {
       </div>
       {imageFileUploadError && (
         <div className="text-red-500">{imageFileUploadError}</div>
+      )}
+      {updateUserSuccess && (
+        <div className="text-green-500 mt-5">{updateUserSuccess}</div>
+      )}
+      {updateUserError && (
+        <div className="text-red-500 mt-5">{updateUserError}</div>
       )}
     </div>
   );
