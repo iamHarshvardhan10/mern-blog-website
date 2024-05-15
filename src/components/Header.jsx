@@ -5,10 +5,12 @@ import { MdDarkMode } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { signOutSuccess } from "../redux/userSlice/userSlice";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch()
   const [toggle, setToggle] = useState(false);
   const [isdropMenu, setIsDropMenu] = useState(false);
   // console.log(toggle);
@@ -19,6 +21,24 @@ const Header = () => {
   const handleDropClick = () => {
     setIsDropMenu(!isdropMenu);
   };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signOut", {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signOutSuccess(data.message));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <nav className="p-4  flex justify-around items-center border-b-2">
       <div className="flex self-center">
@@ -88,6 +108,7 @@ const Header = () => {
                 <Link
                   to="/"
                   className="flex items-center gap-4 text-md font-bold  text-white  p-4 hover:bg-[#010A43]"
+                  onClick={handleSignOut}
                 >
                   Logout <IoIosLogOut className="text-2xl" />
                 </Link>
