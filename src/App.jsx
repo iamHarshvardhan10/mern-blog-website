@@ -8,6 +8,8 @@ import SingIn from "./pages/SingIn";
 import Header from "./components/Header";
 import PrivatePage from "./components/PrivatePage";
 import Footer from "./components/Footer";
+import OnlyAdminPrivatePage from "./components/OnlyAdminPrivatePage";
+import CreatePost from "./components/CreatePost";
 
 const App = () => {
   return (
@@ -19,11 +21,14 @@ const App = () => {
         <Route element={<PrivatePage />}>
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
+        <Route element={<OnlyAdminPrivatePage />}>
+          <Route path="create-post" element={<CreatePost />} />
+        </Route>
         <Route path="projects" element={<Projects />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="sign-in" element={<SingIn />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   );
 };

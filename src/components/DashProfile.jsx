@@ -16,9 +16,10 @@ import {
   deleteSuccess,
   signOutSuccess,
 } from "../redux/userSlice/userSlice";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -195,9 +196,22 @@ const DashProfile = () => {
           className="p-2  w-[500px] rounded-md border-2 border-gray-500 font-bold"
           onChange={handleChange}
         />
-        <button className="border-2 border-gray-500 p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold uppercase">
-          Update
+        <button
+          className="border-2 border-gray-500 p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold uppercase"
+          disabled={loading || imageFileUploading}
+        >
+          {loading ? "Loading..." : "Upload"}
         </button>
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"} className="text-center">
+            <button
+              type="button"
+              className="p-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-xl font-semibold "
+            >
+              Create Post
+            </button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between gap-2 mt-5">
         <span
