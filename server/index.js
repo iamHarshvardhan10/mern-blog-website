@@ -9,6 +9,7 @@ dotenv.config()
 // Importing All Routes 
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
+import postRoutes from './routes/post.route.js'
 // connecting express with const app
 const app = express()
 
@@ -35,6 +36,9 @@ app.use('/api/user', userRoutes)
 // User APIs
 app.use('/api/auth', authRoutes)
 
+
+// Post Apis
+app.use('/api/post',postRoutes)
 
 // creating Middleware 
 
