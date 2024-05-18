@@ -1,7 +1,7 @@
 //  Creating Test Routes
 
 import express from 'express'
-import { deleteUser, signOutUser, test, updateUser } from '../controllers/user.controller.js';
+import { deleteUser, getUser, signOutUser, test, updateUser } from '../controllers/user.controller.js';
 import { verifyUser } from '../utils/verifyUser.js';
 const router = express.Router()
 
@@ -15,5 +15,8 @@ router.delete('/delete/:deleteId',verifyUser,deleteUser)
 
 // signOut functionality
 router.post('/signOut', signOutUser)
+
+// get user functionalit
+router.get('/getuser' , verifyUser, getUser)
 
 export default router;
