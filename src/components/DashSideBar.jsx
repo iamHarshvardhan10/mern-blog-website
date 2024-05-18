@@ -15,7 +15,7 @@ const DashSideBar = () => {
       setTab(tabFromUrl);
     }
   }, [location.search]);
-  console.log(tab)
+  console.log(tab);
 
   const handleSignOut = async () => {
     try {
@@ -42,6 +42,11 @@ const DashSideBar = () => {
         {currentUser.isAdmin && (
           <Link to="/dashboard?tab=posts">
             <li className="p-4  rounded-sm mb-4 bg-black text-white">Posts</li>
+          </Link>
+        )}
+        {currentUser.isAdmin && (
+          <Link to="/dashboard?tab=users">
+            <li className="p-4  rounded-sm mb-4 bg-black text-white">Users</li>
           </Link>
         )}
 
