@@ -6,7 +6,10 @@ const DashPost = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [userpost, setUserPost] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const [postId, setPostId] = useState(null);
+  console.log(postId);
   console.log(userpost);
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -15,8 +18,8 @@ const DashPost = () => {
         if (res.ok) {
           setUserPost(data.posts);
         }
-        if (data.posts.length  < 9) {
-          setShowMore(true);
+        if (data.posts.length < 9) {
+          setShowMore(false);
         }
       } catch (error) {
         console.log(error.message);
@@ -26,6 +29,26 @@ const DashPost = () => {
       fetchPost();
     }
   }, [currentUser._id, currentUser.isAdmin]);
+
+  const handleDelete = async (postId) => {
+    try {
+      const res = await fetch(
+        `/api/post/deletepost/${postId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setUserPost((prev) => prev.filter((post) => post._id !== postId));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div>
       {currentUser.isAdmin && userpost.length > 0 ? (
@@ -76,7 +99,12 @@ const DashPost = () => {
                   </td>
                   <td className="px-6 py-4">{item.category}</td>
                   <td className="px-6 py-4">
-                    <span className="text-red-400 font-semibold">Delete</span>
+                    <span
+                      className="text-red-400 font-semibold"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      Delete
+                    </span>
                   </td>
                   <td className="px-6 py-4">
                     <Link
@@ -94,7 +122,11 @@ const DashPost = () => {
       ) : (
         <p>No Post Yet</p>
       )}
-      {showMore && <button className="w-full self-center  py-7 text-teal-500 text-xl font-semibold mt-4">Show More</button>}
+      {showMore && (
+        <button className="w-full self-center  py-7 text-teal-500 text-xl font-semibold mt-4">
+          Show More
+        </button>
+      )}
     </div>
   );
 };
