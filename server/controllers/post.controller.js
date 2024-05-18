@@ -75,11 +75,31 @@ export const getPost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
   try {
     if (req.user.isAdmin || req.user.id == req.user.userId) {
-      
+
       await Post.findByIdAndDelete(req.params.postId)
       return res.status(200).json({ message: 'Post deleted successfully' })
     }
 
+  } catch (error) {
+    next(error)
+  }
+}
+
+// update post functionality
+
+export const updatePost = async (req, res, next) => {
+  try {
+    if (req.user.isAdmin || req.user.id == req.params.userId) {
+      const post = await Post.findByIdAndUpdate(req.params.postId, {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image
+        }
+      }, { new: true })
+      res.status(200).json(post)
+    }
   } catch (error) {
     next(error)
   }

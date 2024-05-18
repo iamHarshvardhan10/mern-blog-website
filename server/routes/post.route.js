@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyUser } from '../utils/verifyUser.js'
-import { create, deletePost, getPost} from '../controllers/post.controller.js'
+import { create, deletePost, getPost, updatePost } from '../controllers/post.controller.js'
 
 const router = express.Router()
 
@@ -13,6 +13,9 @@ router.post('/create', verifyUser, create)
 router.get('/getposts', getPost)
 
 // delete post
-router.delete('/deletepost/:postId',verifyUser , deletePost)
+router.delete('/deletepost/:postId', verifyUser, deletePost)
+
+// update post api 
+router.put('/updatepost/:postId', verifyUser, updatePost)
 
 export default router
