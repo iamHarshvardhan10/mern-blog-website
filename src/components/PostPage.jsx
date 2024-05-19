@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../pages/Loading";
 import CallToAction from "./CallToAction";
+import CommentSection from "./CommentSection";
 
 const PostPage = () => {
   const [loading, setLoading] = useState(false);
@@ -75,6 +76,9 @@ const PostPage = () => {
       ></div>
       <div className="max-w-4xl mx-auto w-full">
         <CallToAction />
+      </div>
+      <div>
+        <CommentSection postId={post._id} />
       </div>
     </main>
   );
