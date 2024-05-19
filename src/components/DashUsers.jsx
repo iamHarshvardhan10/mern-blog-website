@@ -17,6 +17,22 @@ const DashUsers = () => {
     fetchAllUser();
   }, [currentUser._id]);
 
+  const handleDelete = async (userId) => {
+    try {
+      const res = await fetch(`/api/user/delete/${userId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setUsers((prev) => prev.filter((user) => user._id !== userId));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div>
       {currentUser.isAdmin && users.length > 0 ? (
@@ -82,12 +98,18 @@ const DashUsers = () => {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                   >
-                    <span>{user.isAdmin ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />}</span>
-
+                    <span>
+                      {user.isAdmin ? (
+                        <FaCheck className="text-green-500" />
+                      ) : (
+                        <FaTimes className="text-red-500" />
+                      )}
+                    </span>
                   </th>
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-red-400 whitespace-nowrap"
+                    className="px-6 py-4 font-medium text-gray-900 dark:text-red-400 whitespace-nowrap cursor-pointer"
+                    onClick={() => handleDelete(user._id)}
                   >
                     delete
                   </th>

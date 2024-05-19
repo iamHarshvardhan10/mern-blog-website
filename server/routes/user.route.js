@@ -19,4 +19,7 @@ router.post('/signOut', signOutUser)
 // get user functionalit
 router.get('/getuser' , verifyUser, getUser)
 
+// delete user
+// router.delete('/deleteuser',verifyUser,delete)
+
 export default router;

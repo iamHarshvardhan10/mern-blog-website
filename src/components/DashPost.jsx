@@ -6,9 +6,7 @@ const DashPost = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [userpost, setUserPost] = useState([]);
   const [showMore, setShowMore] = useState(false);
-  const [postId, setPostId] = useState(null);
-  console.log(postId);
-  console.log(userpost);
+  // const [postId, setPostId] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
