@@ -1,5 +1,5 @@
 import express from 'express'
-import { createComment, editcomment, getComments, likecomment } from '../controllers/comment.controller.js'
+import { createComment, deletecomment, editcomment, getComments, likecomment } from '../controllers/comment.controller.js'
 import { verifyUser } from '../utils/verifyUser.js'
 
 const router = express.Router()
@@ -17,5 +17,8 @@ router.put('/likecomment/:commentId' , verifyUser , likecomment)
 
 // for edit comments
 router.put('/editcomments/:commentId',verifyUser , editcomment)
+
+// for delete commenents
+router.delete('/deletecomment/:commentId',verifyUser , deletecomment)
 
 export default router
