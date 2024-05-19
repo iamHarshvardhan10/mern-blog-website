@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import OnlyAdminPrivatePage from "./components/OnlyAdminPrivatePage";
 import CreatePost from "./components/CreatePost";
 import UpdatePost from "./components/UpdatePost";
+import PostPage from "./components/PostPage";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="update-post/:postId" element={<UpdatePost />} />
         </Route>
         <Route path="projects" element={<Projects />} />
+        <Route path="post/:postSlug" element={<PostPage />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="sign-in" element={<SingIn />} />
       </Routes>

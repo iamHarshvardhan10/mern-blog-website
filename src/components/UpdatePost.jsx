@@ -95,7 +95,7 @@ const UpdatePost = () => {
       }
       if (res.ok) {
         setPublishError(null);
-        navigate(`/post`);
+        navigate(`/post/${data.slug}`);
       }
     } catch (error) {
       setPublishError("Publish Failed");
