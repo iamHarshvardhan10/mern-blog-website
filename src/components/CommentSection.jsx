@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Comment from "./Comment";
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [commentError, setCommentError] = useState(false);
-
+  console.log(comments);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -31,6 +33,21 @@ const CommentSection = ({ postId }) => {
       setComment("");
     }
   };
+
+  useEffect(() => {
+    const getComments = async () => {
+      const res = await fetch(`/api/comment/getcomment/${postId}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setCommentError(data.message);
+      }
+      if (res.ok) {
+        setCommentError(false);
+        setComments(data);
+      }
+    };
+    getComments();
+  }, [postId]);
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
@@ -74,7 +91,26 @@ const CommentSection = ({ postId }) => {
           </div>
         </form>
       )}
-      {commentError && <span className="text-red-400 mt-10 ">{commentError}</span>}
+      {commentError && (
+        <span className="text-red-400 mt-10 ">{commentError}</span>
+      )}
+      {comments.length > 0 ? (
+        <div>
+          <div key={comment._id}>
+            <div className="text-sm my-5 flex items-center gap-1">
+              <p>Comments</p>
+              <div className="border border-gray-400 py-1 px-2 rounded-sm">
+                <p>{comments.length}</p>
+              </div>
+            </div>
+            {comments.map((comment) => (
+              <Comment key={comment._id} comment={comment} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="text-red-400">No Comments Posted</p>
+      )}
     </div>
   );
 };
