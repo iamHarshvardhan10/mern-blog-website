@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signOutSuccess } from "../redux/userSlice/userSlice";
 
 const Header = () => {
+  // const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [toggle, setToggle] = useState(false);
   const [isdropMenu, setIsDropMenu] = useState(false);
   // console.log(toggle);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -39,6 +51,14 @@ const Header = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
   return (
     <nav className="p-4  flex justify-around items-center border-b-2">
       <div className="flex self-center">
@@ -49,11 +69,16 @@ const Header = () => {
           <span className="text-md p-1 text-[20px] font-semibold">Blog</span>
         </Link>
       </div>
-      <form className="flex items-center border border-black pt-[5px] pb-[5px] pl-[10px] pr-[10px] rounded-md">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center border border-black pt-[5px] pb-[5px] pl-[10px] pr-[10px] rounded-md"
+      >
         <input
           type="text"
           placeholder="Search..."
           className="outline-none w-[250px] text-black-700"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <span>
           <FaSearch />

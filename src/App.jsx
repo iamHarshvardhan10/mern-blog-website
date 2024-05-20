@@ -13,6 +13,7 @@ import CreatePost from "./components/CreatePost";
 import UpdatePost from "./components/UpdatePost";
 import PostPage from "./components/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/search" element={<Search />} />
         <Route element={<PrivatePage />}>
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
