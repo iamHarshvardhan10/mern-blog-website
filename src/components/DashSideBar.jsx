@@ -49,6 +49,11 @@ const DashSideBar = () => {
             <li className="p-4  rounded-sm mb-4 bg-black text-white">Users</li>
           </Link>
         )}
+        {currentUser.isAdmin && (
+          <Link to="/dashboard?tab=comments">
+            <li className="p-4  rounded-sm mb-4 bg-black text-white">Comments</li>
+          </Link>
+        )}
 
         <li
           className="p-4  rounded-sm mb-4 bg-black text-white"
